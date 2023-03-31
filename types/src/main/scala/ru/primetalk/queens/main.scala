@@ -56,10 +56,10 @@ type Equals[a, b] = (a, b) match
 type AbsDiff[a, b] = (a, b) match
   case (S[a1], S[b1]) =>
     AbsDiff[a1, b1]
-  case (S[a1], Zero) =>
-    S[a1]
-  case (Zero, S[b1]) =>
-    S[b1]
+  case (a, Zero) =>
+    a
+  case (Zero, b) =>
+    b
   case _ => Nothing
 
 type RangeFromZeroTo0[n, xs] = n match
@@ -74,7 +74,13 @@ type RowOfQueens[cols, row] =
     case Cons[col, cols1] => Cons[Queen[row, col], RowOfQueens[cols1, row]]
     case _ =>
       cols
-
+type Threatens2[a, b] = (a, b) match
+  case (Queen[ax, ay], Queen[bx, by]) =>
+    (AbsDiff[ax, bx], AbsDiff[ay, by]) match
+      case (Zero, _)      => True
+      case (_, Zero)      => True
+      case (dx, dy) => Equals[dx, dy]
+  case _ => Nothing
 type Threatens[a, b] =
   (a, b) match
     case (Queen[ax, ay], Queen[bx, by]) =>
